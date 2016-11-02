@@ -8,7 +8,8 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p") })
+@NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
+		@NamedQuery(name = "Person.findAllCount", query = "SELECT count(0) FROM Person p") })
 public class Person implements Serializable {
 	private static final long serialVersionUID = 1L;
 
