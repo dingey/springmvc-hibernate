@@ -4,23 +4,12 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.di.dao.AbstractDao;
-import com.di.dao.PersonDao;
 import com.di.entity.Person;
 import com.di.param.PersonParam;
 
 @Service("personService")
-public class PersonService extends AbstractServiceImpl<Person> {
-	@Autowired
-	private PersonDao personDao;
-
-	@Override
-	public AbstractDao<Person> getAbstractDao() {
-		return personDao;
-	}
-
+public class PersonService extends AbstractBaseService<Person> {
 	@SuppressWarnings("unchecked")
 	public List<Person> findByParam(PersonParam param) {
 		Criteria c = getCurrentSession().createCriteria(Person.class);
@@ -55,6 +44,11 @@ public class PersonService extends AbstractServiceImpl<Person> {
 		}
 		c.setProjection(Projections.rowCount());
 		return Integer.parseInt(c.uniqueResult().toString());
+	}
+
+	@Override
+	public Class<Person> getEntityClass() {
+		return Person.class;
 	}
 
 }
