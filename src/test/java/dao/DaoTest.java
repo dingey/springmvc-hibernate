@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import com.di.entity.Person;
 import com.di.service.PersonService;
+import com.di.toolkit.JacksonUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/application-context.xml")
@@ -20,7 +21,15 @@ public class DaoTest {
 
 	@Test
 	public void test() {
-		nativeQuery();
+		list();
+	}
+
+	public void list() {
+		String sql = "select t1.user_id as userId,t1.user_name as userName from `user` t1,role_user t2,role t3 where t1.user_id=t2.user_id and t2.role_id=t3.role_id";
+		List<User> us = personService.findByNativeQuery(sql, User.class, null, null);
+		for (User u : us) {
+			System.out.println(JacksonUtil.pojoToJson(u));
+		}
 	}
 
 	public void count() {
