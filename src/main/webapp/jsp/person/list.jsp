@@ -10,6 +10,7 @@
 <body>
 	<a href="add.htm">新增</a>
 	<a href="list.htm">list</a>
+	<p>total:${count}</p>
 	<table>
 		<tr>
 			<td>ID</td>

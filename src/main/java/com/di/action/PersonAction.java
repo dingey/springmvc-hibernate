@@ -1,11 +1,13 @@
 package com.di.action;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.di.entity.Person;
+import com.di.pojo.PersonTiny;
 import com.di.service.PersonService;
 
 @Controller
@@ -16,7 +18,14 @@ public class PersonAction {
 
 	@RequestMapping(path = "/list")
 	public String list(Model model) {
-		model.addAttribute("persons", personService.findAll());
+		Object count = personService.findUniqueResultByMap("Person.findAllCount", null);
+		List<PersonTiny> personTinies = personService.findByNativeQuery(
+				"select id,name from person order by id desc", PersonTiny.class, null, null);
+		for (PersonTiny pt : personTinies) {
+			System.out.println(pt.getId());
+		}
+		model.addAttribute("count", count);
+		model.addAttribute("persons", personService.greatThan(3));
 		return "/person/list";
 	}
 

@@ -2,10 +2,13 @@ package com.di.dao.impl;
 
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.di.dao.AbstractDao;
 
@@ -25,7 +28,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findAll(int pageNum, int pageSize) {
+	public List<T> findAll(Integer pageNum, Integer pageSize) {
 		Session session = sessionFactory.getCurrentSession();
 		Query q = session.getNamedQuery(getEntityClass().getSimpleName() + ".findAll");
 		q.setFirstResult(pageNum).setMaxResults(pageSize);
@@ -43,13 +46,18 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findByMap(String queryName, Map<String, Object> params, int pageNum, int pageSize) {
+	public List<T> findByMap(String queryName, Map<String, Object> params, Integer pageNum, Integer pageSize) {
 		Session session = sessionFactory.getCurrentSession();
 		Query q = session.getNamedQuery(queryName);
-		for (String param : params.keySet()) {
-			q.setParameter(param, params.get(param));
+		if (params != null) {
+			for (String param : params.keySet()) {
+				q.setParameter(param, params.get(param));
+			}
 		}
-		q.setFirstResult(pageNum * pageSize - pageSize);
+		if (pageNum != null && pageSize != null) {
+			q.setFirstResult(pageNum * pageSize - pageSize);
+			q.setMaxResults(pageSize);
+		}
 		return q.list();
 	}
 
@@ -70,24 +78,64 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 		Query q = session.getNamedQuery(queryName);
 		q.setParameter(paramName, paramValue);
 		List<T> l = q.list();
-		return l.isEmpty() ? null : (T) l.get(0);
+		return l.isEmpty() ? null : l.get(0);
 	}
 
-	public Object findSingleValueByMap(String queryName, Map<String, Object> params) {
+	public Object findUniqueResultByMap(String queryName, Map<String, Object> params) {
 		Session session = sessionFactory.getCurrentSession();
 		Query q = session.getNamedQuery(queryName);
-		for (String param : params.keySet()) {
-			q.setParameter(param, params.get(param));
+		if (params != null) {
+			for (String param : params.keySet()) {
+				q.setParameter(param, params.get(param));
+			}
 		}
 		return q.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<T> findByNativeQuery(String sql) {
+	public Object findUniqueResultByNativeQuery(String sql) {
 		Session session = sessionFactory.getCurrentSession();
 		SQLQuery q = session.createSQLQuery(sql);
+		return q.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> findByNativeQuery(String sql, Integer pageNum, Integer pageSize) {
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery q = session.createSQLQuery(sql);
+		if (pageNum != null && pageSize != null) {
+			q.setFirstResult((pageNum - 1) * pageSize);
+			q.setMaxResults(pageSize);
+		}
 		q.addEntity(getEntityClass());
 		return q.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <E> List<E> findByNativeQuery(String sql, Class<E> e, Integer pageNum, Integer pageSize) {
+		Session session = sessionFactory.getCurrentSession();
+		SQLQuery q = session.createSQLQuery(sql);
+		if (pageNum != null && pageSize != null) {
+			q.setFirstResult((pageNum - 1) * pageSize);
+			q.setMaxResults(pageSize);
+		}
+		q.setResultTransformer(Transformers.aliasToBean(e));
+		return q.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> findByJpqlPaged(String jpql, Map<String, Object> params, Integer pageNum, Integer pageSize) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(jpql);
+		if (params != null) {
+			for (String key : params.keySet()) {
+				query.setParameter(key, params.get(key));
+			}
+		}
+		if (pageNum != null && pageSize != null) {
+			query.setFirstResult((pageNum - 1) * pageSize);
+			query.setMaxResults(pageSize);
+		}
+		return query.list();
 	}
 
 	public void create(T entity) {
@@ -95,9 +143,10 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 		session.saveOrUpdate(entity);
 	}
 
-	public void update(Object entity) {
+	@SuppressWarnings("unchecked")
+	public void update(T entity) {
 		Session session = sessionFactory.getCurrentSession();
-		entity = session.merge(entity);
+		entity = (T) session.merge(entity);
 		session.persist(entity);
 	}
 
@@ -108,4 +157,13 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 
 	public abstract Class<T> getEntityClass();
 
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> criteria(Criteria c) {
+		return c.list();
+	}
 }

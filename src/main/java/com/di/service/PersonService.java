@@ -1,8 +1,8 @@
 package com.di.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.di.dao.AbstractDao;
 import com.di.dao.PersonDao;
 import com.di.entity.Person;
@@ -15,6 +15,10 @@ public class PersonService extends AbstractServiceImpl<Person> {
 	@Override
 	public AbstractDao<Person> getAbstractDao() {
 		return personDao;
+	}
+
+	public List<Person> greatThan(int id) {
+		return personDao.greatThan(id);
 	}
 
 }
