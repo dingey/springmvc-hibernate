@@ -2,6 +2,7 @@ package com.di.service;
 
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 import com.di.dao.AbstractDao;
 
@@ -43,8 +44,8 @@ public abstract class AbstractServiceImpl<T> {
 		return getAbstractDao().findByNativeQuery(sql, null, null);
 	}
 
-	public <E> List<E> findByNativeQuery(String sql, Class<E> e, Integer pageNum, Integer pageSize) {
-		return getAbstractDao().findByNativeQuery(sql, e, pageNum, pageSize);
+	public <E> List<E> findByNativeQuery(String sql, Class<E> resultClass, Integer pageNum, Integer pageSize) {
+		return getAbstractDao().findByNativeQuery(sql, resultClass, pageNum, pageSize);
 	}
 
 	public List<T> findByJpqlPaged(String jpql, Map<String, Object> params, int pageNum, int pageSize) {
@@ -68,4 +69,7 @@ public abstract class AbstractServiceImpl<T> {
 
 	public abstract AbstractDao<T> getAbstractDao();
 
+	public Session getCurrentSession() {
+		return getAbstractDao().getSessionFactory().getCurrentSession();
+	}
 }

@@ -11,6 +11,25 @@
 	<a href="add.htm">新增</a>
 	<a href="list.htm">list</a>
 	<p>total:${count}</p>
+	<form action="list.htm" method="post">
+		<table>
+			<tr>
+				<td>id</td>
+				<td><input type="text" name="id" value="${param.id}"></td>
+			</tr>
+			<tr>
+				<td>name</td>
+				<td><input type="text" name="name" value="${param.name}"></td>
+			</tr>
+			<tr>
+				<td>age</td>
+				<td><input type="text" name="age" value="${param.age}"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="submit" value="submit"></td>
+			</tr>
+		</table>
+	</form>
 	<table>
 		<tr>
 			<td>ID</td>
