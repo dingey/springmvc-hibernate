@@ -1,7 +1,20 @@
 package com.di.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.di.dao.AbstractDao;
+import com.di.dao.PersonDao;
 import com.di.entity.Person;
 
-public interface PersonService extends AbstractService<Person>{
+@Service("personService")
+public class PersonService extends AbstractServiceImpl<Person> {
+	@Autowired
+	private PersonDao personDao;
+
+	@Override
+	public AbstractDao<Person> getAbstractDao() {
+		return personDao;
+	}
 
 }
