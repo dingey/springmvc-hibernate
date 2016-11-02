@@ -6,6 +6,10 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+<<<<<<< HEAD
+=======
+import org.hibernate.Transaction;
+>>>>>>> origin/master
 import org.springframework.beans.factory.annotation.Autowired;
 import com.di.dao.AbstractDao;
 
