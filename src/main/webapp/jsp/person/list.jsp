@@ -8,6 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<a href="add.htm">新增</a>
+	<a href="list.htm">list</a>
 	<table>
 		<tr>
 			<td>ID</td>

@@ -8,6 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<a href="add.htm">新增</a>
+	<a href="list.htm">list</a>
 	<form action="save.htm">
 		<table>
 			<input type="hidden" name="id" value="${person.id}">
