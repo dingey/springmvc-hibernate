@@ -19,8 +19,8 @@ public class PersonAction {
 	@RequestMapping(path = "/list")
 	public String list(Model model) {
 		Object count = personService.findUniqueResultByMap("Person.findAllCount", null);
-		List<PersonTiny> personTinies = personService.findByNativeQuery(
-				"select id,name from person order by id desc", PersonTiny.class, null, null);
+		List<PersonTiny> personTinies = personService.findByNativeQuery("select id,name from person order by id desc",
+				PersonTiny.class, null, null);
 		for (PersonTiny pt : personTinies) {
 			System.out.println(pt.getId());
 		}
