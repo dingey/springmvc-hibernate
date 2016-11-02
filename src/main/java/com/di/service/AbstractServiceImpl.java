@@ -2,6 +2,9 @@ package com.di.service;
 
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import com.di.dao.AbstractDao;
 
 public abstract class AbstractServiceImpl<T> {
@@ -38,14 +41,17 @@ public abstract class AbstractServiceImpl<T> {
 		return getAbstractDao().findByNativeQuery(sql);
 	}
 
+	@Transactional
 	public void create(T entity) {
 		getAbstractDao().create(entity);
 	}
 
+	@Transactional
 	public void update(T entity) {
 		getAbstractDao().update(entity);
 	}
 
+	@Transactional
 	public void delete(T entity) {
 		getAbstractDao().delete(entity);
 	}

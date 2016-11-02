@@ -92,7 +92,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 
 	public void create(T entity) {
 		Session session = sessionFactory.getCurrentSession();
-		session.persist(entity);
+		session.saveOrUpdate(entity);
 	}
 
 	public void update(Object entity) {
