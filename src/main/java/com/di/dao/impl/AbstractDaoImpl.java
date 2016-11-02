@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.di.dao.AbstractDao;
 
@@ -92,7 +93,7 @@ public abstract class AbstractDaoImpl<T> implements AbstractDao<T> {
 
 	public void create(T entity) {
 		Session session = sessionFactory.getCurrentSession();
-		session.persist(entity);
+		session.saveOrUpdate(entity);
 	}
 
 	public void update(Object entity) {
