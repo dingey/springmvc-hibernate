@@ -20,6 +20,21 @@ public class DaoTest {
 
 	@Test
 	public void test() {
+		nativeQuery();
+	}
+
+	public void count() {
+		System.out.println(personService.findUniqueResultByNativeQuery("select count(0) from person"));
+	}
+
+	public void nativeQuery() {
+		List<Person> ps = personService.findByNativeQuery("select * from person where id>2");
+		for (Person p : ps) {
+			System.out.println(p);
+		}
+	}
+
+	public void findAll() {
 		List<Person> ps = personService.findAll();
 		for (Person p : ps) {
 			System.out.println(p);
